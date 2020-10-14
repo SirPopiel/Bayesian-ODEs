@@ -1,0 +1,5 @@
+FILO:
+
+- Se hanno effettivamente costo O(1) di memoria, non dovrebbero farmi esplodere colab. Per il deployment, ci sarà tempo maggiore per iteration, ma se a livello di memoria è così buono, non dovrebbe essere una buona alternativa a MobileNet ecc per utilizzo su cellulari e dispositivi IOT?
+
+- L'utilizzo principale mi sembra come alternativa a RNN per continous time series.
