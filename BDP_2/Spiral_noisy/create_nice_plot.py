@@ -10,12 +10,10 @@ plt.switch_backend('agg')
 from scipy.integrate import odeint
 from scipy import stats
 
-
 from plotting import newfig, savefig
 
-
 np.random.seed(1234)
-tf.set_random_seed(1234)
+tf.compat.v1.set_random_seed(1234)
 
 if __name__ == "__main__":
 

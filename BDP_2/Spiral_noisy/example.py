@@ -3,21 +3,27 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 import numpy as np
 import numpy.random as npr
+
 import tensorflow as tf
+#import tensorflow.compat.v1 as tf
+#tf.disable_v2_behavior()
+
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
-import tensorflow.contrib.eager as tfe
+import tensorflow.python.eager as tfe
+# c'è problema di compatibilità con tf python eager
+
 from tensorflow.keras import layers, initializers
 from scipy.integrate import odeint
 
 
 keras = tf.keras
-tf.enable_eager_execution()
+tf.compat.v1.enable_eager_execution()
 
-from neural_ode import NeuralODE 
+from neural_ode import NeuralODE
 
 np.random.seed(1234)
-tf.set_random_seed(1234)
+tf.compat.v1.set_random_seed(1234)
 
 if __name__ == "__main__":
 
@@ -44,7 +50,7 @@ if __name__ == "__main__":
     theta = -0.1
 
     z0 = [2., 0.]
-    true_y0 = tf.to_float([[2., 0.]])
+    true_y0 = tf.cast([[2., 0.]], dtype=tf.float32)
     t_grid = np.linspace(0, 20, data_size)
 
     true_yy = odeint(Spiral, z0, t_grid, args=(alpha, beta, gamma, theta)) 
@@ -59,7 +65,7 @@ if __name__ == "__main__":
         starts = np.random.choice(np.arange(data_size - batch_time - 1, dtype=np.int64), batch_size, replace=False)
         batch_y0 = true_y[starts] 
         batch_yN = true_y[starts + batch_time]
-        return tf.to_float(batch_y0), tf.to_float(batch_yN)
+        return tf.cast(batch_y0, dtype=tf.float32), tf.cast(batch_yN, dtype=tf.float32)
 
 
     Order = 4
@@ -86,7 +92,7 @@ if __name__ == "__main__":
     class ODEModel_pre(tf.keras.Model):
         def __init__(self):
             super(ODEModel_pre, self).__init__()
-            self.Weights = tfe.Variable(tf.random_normal([num_param//2, 2], dtype=tf.float32)*0.01, dtype=tf.float32) 
+            self.Weights = tf.Variable(tf.random.normal([num_param//2, 2], dtype=tf.float32)*0.01, dtype=tf.float32)
 
         def call(self, inputs, **kwargs):
             t, y = inputs
@@ -104,15 +110,16 @@ if __name__ == "__main__":
 
     model_pre = ODEModel_pre()
     neural_ode_pre = NeuralODE(model_pre, t_in)
-    optimizer = tf.train.AdamOptimizer(3e-2)
+    optimizer = tf.compat.v1.train.AdamOptimizer(3e-2)
 
-
+    #@tfe.defun
+    @tf.function
     def compute_gradients_and_update_pre(batch_y0, batch_yN):
         """Takes start positions (x0, y0) and final positions (xN, yN)"""
         pred_y = neural_ode_pre.forward(batch_y0)
         with tf.GradientTape() as g_pre:
             g_pre.watch(pred_y)
-            loss = tf.reduce_mean((pred_y - batch_yN)**2) + tf.reduce_sum(tf.abs(model_pre.Weights))
+            loss = tf.reduce_mean(input_tensor=(pred_y - batch_yN)**2) + tf.reduce_sum(input_tensor=tf.abs(model_pre.Weights))
             
         dLoss = g_pre.gradient(loss, pred_y)
         h_start, dfdh0, dWeights = neural_ode_pre.backward(pred_y, dLoss)
@@ -120,7 +127,7 @@ if __name__ == "__main__":
         return loss, dWeights
 
     # Compile EAGER graph to static (this will be much faster)
-    compute_gradients_and_update_pre = tfe.defun(compute_gradients_and_update_pre)
+    #compute_gradients_and_update_pre = tfe.defun(compute_gradients_and_update_pre)
 
     parameters_pre = np.zeros((niters_pre, num_param))
 
@@ -144,7 +151,7 @@ if __name__ == "__main__":
     class ODEModel(tf.keras.Model):
         def __init__(self, initial_weight):
             super(ODEModel, self).__init__()
-            self.Weights = tfe.Variable(initial_weight, dtype=tf.float32) 
+            self.Weights = tf.Variable(initial_weight, dtype=tf.float32)
 
         def call(self, inputs, **kwargs):
             t, y = inputs
@@ -163,12 +170,14 @@ if __name__ == "__main__":
     model = ODEModel(initial_weight)
     neural_ode = NeuralODE(model, t = t_in)
 
+    #@tfe.defun
+    @tf.function
     def compute_gradients_and_update(batch_y0, batch_yN): 
         """Takes start positions (x0, y0) and final positions (xN, yN)"""
         pred_y = neural_ode.forward(batch_y0)
         with tf.GradientTape() as g:
             g.watch(pred_y)
-            loss = tf.reduce_sum((pred_y - batch_yN)**2)
+            loss = tf.reduce_sum(input_tensor=(pred_y - batch_yN)**2)
             
         dLoss = g.gradient(loss, pred_y)
         h_start, dfdh0, dWeights = neural_ode.backward(pred_y, dLoss)
@@ -176,7 +185,7 @@ if __name__ == "__main__":
         return loss, dWeights
 
     # Compile EAGER graph to static (this will be much faster)
-    compute_gradients_and_update = tfe.defun(compute_gradients_and_update)
+    #compute_gradients_and_update = tfe.defun(compute_gradients_and_update)
 
 
     # function to compute the kinetic energy

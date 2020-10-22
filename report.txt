@@ -1,0 +1,383 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 23 files
+Detected 23 issues that require attention
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+File: BayesianDifferentiableProgramming-master\Damped_Sine\example.py
+--------------------------------------------------------------------------------
+BayesianDifferentiableProgramming-master\Damped_Sine\example.py:319:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Damped_Sine\example.py:320:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Damped_Sine\example.py:321:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+File: BayesianDifferentiableProgramming-master\Glycolysis_noisy\HMC.py
+--------------------------------------------------------------------------------
+BayesianDifferentiableProgramming-master\Glycolysis_noisy\HMC.py:360:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Glycolysis_noisy\HMC.py:361:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Glycolysis_noisy\HMC.py:362:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+File: BayesianDifferentiableProgramming-master\Glycolysis_noisy\pre_train.py
+--------------------------------------------------------------------------------
+BayesianDifferentiableProgramming-master\Glycolysis_noisy\pre_train.py:106:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Glycolysis_noisy\pre_train.py:147:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Glycolysis_noisy\pre_train.py:148:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Glycolysis_noisy\pre_train.py:257:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+File: BayesianDifferentiableProgramming-master\Hybrid_Sine_NN\HMC.py
+--------------------------------------------------------------------------------
+BayesianDifferentiableProgramming-master\Hybrid_Sine_NN\HMC.py:314:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Hybrid_Sine_NN\HMC.py:315:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Hybrid_Sine_NN\HMC.py:316:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+File: BayesianDifferentiableProgramming-master\Hybrid_Sine_NN\pre_train.py
+--------------------------------------------------------------------------------
+BayesianDifferentiableProgramming-master\Hybrid_Sine_NN\pre_train.py:54:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Hybrid_Sine_NN\pre_train.py:100:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Hybrid_Sine_NN\pre_train.py:101:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Hybrid_Sine_NN\pre_train.py:192:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+File: BayesianDifferentiableProgramming-master\LV_noisy\example.py
+--------------------------------------------------------------------------------
+BayesianDifferentiableProgramming-master\LV_noisy\example.py:341:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\LV_noisy\example.py:342:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\LV_noisy\example.py:343:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+File: BayesianDifferentiableProgramming-master\Spiral_noisy\example.py
+--------------------------------------------------------------------------------
+BayesianDifferentiableProgramming-master\Spiral_noisy\example.py:336:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Spiral_noisy\example.py:337:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+BayesianDifferentiableProgramming-master\Spiral_noisy\example.py:338:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+================================================================================
+Detailed log follows:
+
+================================================================================
+================================================================================
+Input tree: 'BayesianDifferentiableProgramming-master'
+================================================================================
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Damped_Sine\\create_nice_plot.py'
+ outputting to 'BDP_2\\Damped_Sine\\create_nice_plot.py'
+--------------------------------------------------------------------------------
+
+17:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Damped_Sine\\example.py'
+ outputting to 'BDP_2\\Damped_Sine\\example.py'
+--------------------------------------------------------------------------------
+
+15:0: INFO: Renamed 'tf.enable_eager_execution' to 'tf.compat.v1.enable_eager_execution'
+20:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+46:14: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+60:14: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+68:15: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+68:38: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+95:40: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+114:16: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+122:19: INFO: Added keywords to args of function 'tf.reduce_mean'
+122:60: INFO: Added keywords to args of function 'tf.reduce_sum'
+178:19: INFO: Added keywords to args of function 'tf.reduce_sum'
+319:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+320:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+321:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Damped_Sine\\neural_ode.py'
+ outputting to 'BDP_2\\Damped_Sine\\neural_ode.py'
+--------------------------------------------------------------------------------
+
+67:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+67:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+68:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+73:47: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+101:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+101:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+103:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+111:49: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Damped_Sine\\plotting.py'
+ outputting to 'BDP_2\\Damped_Sine\\plotting.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Glycolysis_noisy\\create_nice_plot.py'
+ outputting to 'BDP_2\\Glycolysis_noisy\\create_nice_plot.py'
+--------------------------------------------------------------------------------
+
+16:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Glycolysis_noisy\\HMC.py'
+ outputting to 'BDP_2\\Glycolysis_noisy\\HMC.py'
+--------------------------------------------------------------------------------
+
+17:0: INFO: Renamed 'tf.enable_eager_execution' to 'tf.compat.v1.enable_eager_execution'
+22:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+99:15: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+100:15: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+132:40: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+207:19: INFO: Added keywords to args of function 'tf.reduce_sum'
+360:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+361:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+362:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Glycolysis_noisy\\neural_ode.py'
+ outputting to 'BDP_2\\Glycolysis_noisy\\neural_ode.py'
+--------------------------------------------------------------------------------
+
+67:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+67:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+68:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+73:47: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+101:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+101:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+103:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+111:49: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Glycolysis_noisy\\plotting.py'
+ outputting to 'BDP_2\\Glycolysis_noisy\\plotting.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Glycolysis_noisy\\pre_train.py'
+ outputting to 'BDP_2\\Glycolysis_noisy\\pre_train.py'
+--------------------------------------------------------------------------------
+
+17:0: INFO: Renamed 'tf.enable_eager_execution' to 'tf.compat.v1.enable_eager_execution'
+22:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+91:14: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+106:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+135:15: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+135:38: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+147:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+148:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+158:40: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+227:16: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+235:19: INFO: Added keywords to args of function 'tf.reduce_mean'
+235:60: INFO: Added keywords to args of function 'tf.reduce_sum'
+236:24: INFO: Added keywords to args of function 'tf.reduce_sum'
+257:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Hybrid_Sine_NN\\create_nice_plot_hybrid.py'
+ outputting to 'BDP_2\\Hybrid_Sine_NN\\create_nice_plot_hybrid.py'
+--------------------------------------------------------------------------------
+
+18:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Hybrid_Sine_NN\\HMC.py'
+ outputting to 'BDP_2\\Hybrid_Sine_NN\\HMC.py'
+--------------------------------------------------------------------------------
+
+15:0: INFO: Renamed 'tf.enable_eager_execution' to 'tf.compat.v1.enable_eager_execution'
+20:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+46:14: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+57:15: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+58:15: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+99:40: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+158:19: INFO: Added keywords to args of function 'tf.reduce_sum'
+314:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+315:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+316:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Hybrid_Sine_NN\\neural_ode.py'
+ outputting to 'BDP_2\\Hybrid_Sine_NN\\neural_ode.py'
+--------------------------------------------------------------------------------
+
+67:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+67:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+68:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+73:47: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+101:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+101:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+103:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+111:49: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Hybrid_Sine_NN\\plotting.py'
+ outputting to 'BDP_2\\Hybrid_Sine_NN\\plotting.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Hybrid_Sine_NN\\pre_train.py'
+ outputting to 'BDP_2\\Hybrid_Sine_NN\\pre_train.py'
+--------------------------------------------------------------------------------
+
+15:0: INFO: Renamed 'tf.enable_eager_execution' to 'tf.compat.v1.enable_eager_execution'
+20:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+46:14: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+54:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+63:14: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+71:15: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+71:38: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+100:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+101:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+112:40: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+165:16: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+173:19: INFO: Added keywords to args of function 'tf.reduce_mean'
+173:60: INFO: Added keywords to args of function 'tf.reduce_sum'
+192:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Hybrid_Sine_NN\\Show_NN_fit.py'
+ outputting to 'BDP_2\\Hybrid_Sine_NN\\Show_NN_fit.py'
+--------------------------------------------------------------------------------
+
+17:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\LV_noisy\\create_nice_plot.py'
+ outputting to 'BDP_2\\LV_noisy\\create_nice_plot.py'
+--------------------------------------------------------------------------------
+
+ERROR: Failed to parse.
+Traceback (most recent call last):
+  File "c:\users\ffede\venv\lib\site-packages\tensorflow\tools\compatibility\ast_edits.py", line 940, in update_string_pasta
+    t = pasta.parse(text)
+  File "c:\users\ffede\venv\lib\site-packages\pasta\__init__.py", line 23, in parse
+    t = ast_utils.parse(src)
+  File "c:\users\ffede\venv\lib\site-packages\pasta\base\ast_utils.py", line 56, in parse
+    tree = ast.parse(sanitize_source(src))
+  File "c:\python38\lib\ast.py", line 47, in parse
+    return compile(source, filename, mode, flags,
+  File "<unknown>", line 151
+    plt.plot(t_grid_true, y_MAP[:,0], 'b--', label = "MAP Trajectory of $x_1(t)$")    plt.xlabel('$t$',fontsize=26)
+                                                                                      ^
+SyntaxError: invalid syntax
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\LV_noisy\\example.py'
+ outputting to 'BDP_2\\LV_noisy\\example.py'
+--------------------------------------------------------------------------------
+
+17:0: INFO: Renamed 'tf.enable_eager_execution' to 'tf.compat.v1.enable_eager_execution'
+22:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+75:15: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+75:38: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+97:40: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+119:16: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+127:19: INFO: Added keywords to args of function 'tf.reduce_mean'
+127:60: INFO: Added keywords to args of function 'tf.reduce_sum'
+159:40: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+187:19: INFO: Added keywords to args of function 'tf.reduce_sum'
+341:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+342:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+343:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\LV_noisy\\neural_ode.py'
+ outputting to 'BDP_2\\LV_noisy\\neural_ode.py'
+--------------------------------------------------------------------------------
+
+67:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+67:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+68:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+73:47: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+101:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+101:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+103:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+111:49: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\LV_noisy\\plotting.py'
+ outputting to 'BDP_2\\LV_noisy\\plotting.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Spiral_noisy\\create_nice_plot.py'
+ outputting to 'BDP_2\\Spiral_noisy\\create_nice_plot.py'
+--------------------------------------------------------------------------------
+
+16:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Spiral_noisy\\example.py'
+ outputting to 'BDP_2\\Spiral_noisy\\example.py'
+--------------------------------------------------------------------------------
+
+18:0: INFO: Renamed 'tf.enable_eager_execution' to 'tf.compat.v1.enable_eager_execution'
+23:0: INFO: Renamed 'tf.set_random_seed' to 'tf.compat.v1.set_random_seed'
+50:14: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+65:15: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+65:38: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+92:40: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+110:16: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+118:19: INFO: Added keywords to args of function 'tf.reduce_mean'
+118:60: INFO: Added keywords to args of function 'tf.reduce_sum'
+174:19: INFO: Added keywords to args of function 'tf.reduce_sum'
+336:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+337:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+338:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Spiral_noisy\\neural_ode.py'
+ outputting to 'BDP_2\\Spiral_noisy\\neural_ode.py'
+--------------------------------------------------------------------------------
+
+67:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+67:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+68:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+73:47: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+101:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+101:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+103:17: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+111:49: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'BayesianDifferentiableProgramming-master\\Spiral_noisy\\plotting.py'
+ outputting to 'BDP_2\\Spiral_noisy\\plotting.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+Obtained through
+
+tf_upgrade_v2 --intree BayesianDifferentiableProgramming-master --outtree BDP_2 --reportfile report.txt
+
