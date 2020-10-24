@@ -1,6 +1,6 @@
 FILO:
 
-- Estendere l'algoritmo di Pernikaris a sistemi dinamici solo parzialmente osservabili.
+- Estendere l'algoritmo di Perdikaris a sistemi dinamici solo parzialmente osservabili.
 
 - Legare tra loro diversi sistemi dinamici con la loro dinamica interna (viaggi) e valutare influenza. Termine di interazione non quantificabile -> rete neurale.
 
