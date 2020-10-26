@@ -23,132 +23,141 @@ tf.compat.v1.set_random_seed(1234)
 
 if __name__ == "__main__":
 
+    # Definition of the Lotka-Volterra model, with VP = f(x(t), t; theta)
     def VP(z, t, alpha, beta, gamma, sigma):
         x, y = z
         dzdt = [alpha * x - beta * x * y, - gamma * y + sigma * x*y]
         return dzdt
 
 
+    # Function to plot the trajectories in the 2D state space
     def plot_spiral(trajectories, width = 1.):
         x = trajectories[:,0]
         y = trajectories[:,1]
         plt.plot(x, y, linewidth = width)
 
-    
-    data_size = 16001
-    batch_time = 320 
-    niters = 5000
+
+    # Data of the problem
+    data_size = 16001  # Size of the dataset (fictitious and created by adding noise to the real
+                       #  data found through the integration of the system)
+    batch_time = 320  #
+    niters = 5000  # Number of Hamiltonian MC iterations
     batch_size = 1000
 
+    # Parameters of the true model
     alpha = 1.
     beta = 0.1
     gamma = 1.5
     sigma = 0.75
         
-    t_grid = np.linspace(0, 25, data_size)
-    z0 = [5., 5.]
-    true_yy = odeint(VP, z0, t_grid, args=(alpha, beta, gamma, sigma)) 
-
-
+    t_grid = np.linspace(0, 25, data_size)  # time grid of the same length of data_size
+    z0 = [5., 5.]  # Starting point: 5 preys, 5 predators
+    true_yy = odeint(VP, z0, t_grid, args=(alpha, beta, gamma, sigma))
+    # This calls the Python scipy built-in odeint function in FORTRAN to find the exact values
+    #  for the trajectories
 
     true_y = true_yy
 
     # normalizing data and system
-    sigma_x = np.std(true_yy[:,0:1])
-    sigma_y = np.std(true_yy[:,1:2])
+    sigma_x = np.std(true_yy[:,0:1])  # Standard deviation of data for x = preys
+    sigma_y = np.std(true_yy[:,1:2])  # Standard deviation of data for y = predators
 
-    noise_level = 0.03
-    sigma_normal = max(sigma_x, sigma_y)
+    noise_level = 0.03  # Adding some nois with this noise level
+    sigma_normal = max(sigma_x, sigma_y)  # Considering the highest between the 2
 
-
-    true_y[:,0:1] = true_y[:,0:1]/ sigma_x + noise_level * np.random.randn(true_y[:,0:1].shape[0], true_y[:,0:1].shape[1])
-    true_y[:,1:2] = true_y[:,1:2]/ sigma_y + noise_level * np.random.randn(true_y[:,1:2].shape[0], true_y[:,1:2].shape[1])
-
-
+    true_y[:, 0:1] = true_y[:, 0:1]/sigma_x + noise_level * np.random.randn(true_y[:, 0:1].shape[0], true_y[:, 0:1].shape[1])
+    true_y[:, 1:2] = true_y[:, 1:2]/sigma_y + noise_level * np.random.randn(true_y[:, 1:2].shape[0], true_y[:, 1:2].shape[1])
+    # The 2 lines above normalize the data and then add a noise being extract from a gaussian
+    #  random variable with 0 mean and (noise_level)^2 variance.
 
 
     def get_batch():
         """Returns initial point and last point over sampled frament of trajectory"""
         starts = np.random.choice(np.arange(data_size - batch_time - 1, dtype=np.int64), batch_size, replace=False)
+        # This randomly chooses from {0, 1, ... , data_size - batch_time - 1}, batch_size different elements
         batch_y0 = true_y[starts] 
         batch_yN = true_y[starts + batch_time]
+        # The function returns a tensor composed by some y0 and the respective yN,
+        #  being y0 + DeltaT.
         return tf.cast(batch_y0, dtype=tf.float32), tf.cast(batch_yN, dtype=tf.float32)
 
 
-    num_param = 4
+    num_param = 4  # Number of parameters
     para_num = num_param
 
-    t0 = t_grid[:batch_time][0]
-    t1 = t_grid[:batch_time][-1]
-    t_in = np.linspace(t0, t1, 20) 
+    t0 = t_grid[:batch_time][0]  # t0 = first element of t_grid
+    t1 = t_grid[:batch_time][-1]  # t1 = the element of t_grid at batch_time
+    t_in = np.linspace(t0, t1, 20)  # The time grid between t0 and t1
 
-
-    batch_y0, batch_yN = get_batch()
-
+    batch_y0, batch_yN = get_batch()  # Returns the first and the last y observed for each batch
 
     #########################################
-    ########## precondition start ###########
+    #         precondition start            #
     #########################################
-    niters_pre = 500
+    niters_pre = 500  # Number of iterations of the preconditioner
 
     class ODEModel_pre(tf.keras.Model):
         def __init__(self):
             super(ODEModel_pre, self).__init__()
             self.Weights = tf.Variable(tf.random.normal([num_param, 1], dtype=tf.float32)*0.01, dtype=tf.float32)
-
+        # Initializer: assign normally distributed random weights which are very close to zero
 
         def call(self, inputs, **kwargs):
             t, y = inputs
             h = y
-            h1 = h[:,0:1]
-            h2 = h[:,1:2]
+            h1 = h[:, 0:1]  # preys
+            h2 = h[:, 1:2]  # predators
 
             p1 = self.Weights[0]
             p2 = self.Weights[1]
-            p3 = self.Weights[2]  
-            p4 = self.Weights[3] 
+            p3 = self.Weights[2]
+            p4 = self.Weights[3]
 
-            h_out1 = p1 * h1 + sigma_y * p2 * h2*h1 
-            h_out2 = p3 * h2 + sigma_x * p4 * h2*h1
+            h_out1 = p1 * h1 + sigma_y * p2 * h2*h1  # Why sigma_y?? Think it's due to normalization, but boh
+            h_out2 = p3 * h2 + sigma_x * p4 * h2*h1  # Why sigma_x??
             h_out = tf.concat([h_out1, h_out2], 1)
+            # This function is computing the f(x(t), t; p) at [x,t] in 'inputs' and with p
+            #  the actual weights of the model
             return h_out
 
 
-    model_pre = ODEModel_pre()
-    neural_ode_pre = NeuralODE(model_pre, t_in)
-    optimizer = tf.compat.v1.train.AdamOptimizer(3e-2)
+    model_pre = ODEModel_pre()  # Here we initialize the model of the preconditioner
+    neural_ode_pre = NeuralODE(model_pre, t_in)  # We pass to NeuralODE the actual model
+    # and the times we are considering for the step [t0, t1]
+    optimizer = tf.compat.v1.train.AdamOptimizer(3e-2)  # The optimizer we're going to use
 
 
     @tf.function
     def compute_gradients_and_update_pre(batch_y0, batch_yN):
         """Takes start positions (x0, y0) and final positions (xN, yN)"""
-        pred_y = neural_ode_pre.forward(batch_y0)
+        pred_y = neural_ode_pre.forward(batch_y0)  # Predict y using Runge-Kutta 4 for each y0 in batch_y0
         with tf.GradientTape() as g_pre:
             g_pre.watch(pred_y)
             loss = tf.reduce_mean(input_tensor=(pred_y - batch_yN)**2) + tf.reduce_sum(input_tensor=tf.abs(model_pre.trainable_weights[0]))
-            
-        dLoss = g_pre.gradient(loss, pred_y)
-        h_start, dfdh0, dWeights = neural_ode_pre.backward(pred_y, dLoss)
-        optimizer.apply_gradients(zip(dWeights, model_pre.weights))
+            # This step is computing the loss function
+        dLoss = g_pre.gradient(loss, pred_y)  # Here we compute the gradient of the loss function
+        h_start, dfdh0, dWeights = neural_ode_pre.backward(pred_y, dLoss)  # Here we compute the dWeights
+        optimizer.apply_gradients(zip(dWeights, model_pre.weights))  # Here we update the weights
         return loss, dWeights
 
     # Compile EAGER graph to static (this will be much faster)
-    #compute_gradients_and_update_pre = tfe.defun(compute_gradients_and_update_pre)
+    # compute_gradients_and_update_pre = tfe.defun(compute_gradients_and_update_pre)
 
     parameters_pre = np.zeros((para_num, 1))
-
 
     for step in range(niters_pre):
         print(step)
         loss, dWeights = compute_gradients_and_update_pre(batch_y0, batch_yN)
         parameters_pre = model_pre.trainable_weights[0].numpy()
 
-        
         print(parameters_pre)
 
     #########################################
-    ########## precondition end #############
+    #          precondition end             #
     #########################################
+
+    # Until here no Bayesian framework is considered. It is just to provide the model with
+    #  a starting point 
 
     initial_weight = parameters_pre
     print(initial_weight.shape, "here")

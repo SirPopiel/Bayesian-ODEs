@@ -2,7 +2,7 @@ from typing import Optional, List
 import numpy as np
 import tensorflow as tf
 from tensorflow.python.framework.ops import EagerTensor
-import tensorflow.contrib.eager as tfe
+#import tensorflow.contrib.eager as tfe
 
 keras = tf.keras
 
