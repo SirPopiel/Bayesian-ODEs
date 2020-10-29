@@ -138,12 +138,12 @@ if __name__ == "__main__":
             loss = tf.reduce_mean(input_tensor=(pred_y - batch_yN)**2) + tf.reduce_sum(input_tensor=tf.abs(model_pre.Weights))
             
         dLoss = g_pre.gradient(loss, pred_y)
-        h_start, dfdh0, dWeights = neural_ode_pre.backward(pred_y, dLoss) # derivative of the weights
+        h_start, dfdh0, dWeights = neural_ode_pre.backward(pred_y, dLoss) # derivative of the weights (gradient descent applied)
         optimizer.apply_gradients(zip(dWeights, model_pre.weights)) # weights update
         return loss, dWeights
 
     # Compile EAGER graph to static (this will be much faster)
-    #compute_gradients_and_update_pre = tfe.defun(compute_gradients_and_update_pre)
+    # compute_gradients_and_update_pre = tfe.defun(compute_gradients_and_update_pre)
 
     parameters_pre = np.zeros((niters_pre, num_param))
 
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     ########## precondition end #############
     #########################################
 
-    initial_weight = model_pre.trainable_weights[0].numpy()
+    initial_weight = model_pre.trainable_weights[0].numpy() # initialization thanks to preconditioning procedure up to now
     print(initial_weight.shape, "here")
 
     class ODEModel(tf.keras.Model):
@@ -181,27 +181,33 @@ if __name__ == "__main__":
                     
             h_out = tf.matmul(temp, self.Weights)
             return h_out
+        # same procedure as for preconditioning steps
 
 
-    model = ODEModel(initial_weight)
+    model = ODEModel(initial_weight) # model initialized with the weights resulting from the preconditioning
     neural_ode = NeuralODE(model, t = t_in)
 
     #@tfe.defun
     @tf.function
     def compute_gradients_and_update(batch_y0, batch_yN): 
         """Takes start positions (x0, y0) and final positions (xN, yN)"""
-        pred_y = neural_ode.forward(batch_y0)
+        pred_y = neural_ode.forward(batch_y0) # y prediction for each y0 in batch y0 (see above as for the preconditioning procedure)
         with tf.GradientTape() as g:
             g.watch(pred_y)
             loss = tf.reduce_sum(input_tensor=(pred_y - batch_yN)**2)
             
         dLoss = g.gradient(loss, pred_y)
-        h_start, dfdh0, dWeights = neural_ode.backward(pred_y, dLoss)
+        h_start, dfdh0, dWeights = neural_ode.backward(pred_y, dLoss) # derivative of the weights (gradient descent applied)
 
         return loss, dWeights
 
     # Compile EAGER graph to static (this will be much faster)
-    #compute_gradients_and_update = tfe.defun(compute_gradients_and_update)
+    # compute_gradients_and_update = tfe.defun(compute_gradients_and_update)
+
+
+
+    # Bayesian techniques introduced:
+
 
 
     # function to compute the kinetic energy
@@ -217,6 +223,7 @@ if __name__ == "__main__":
     def compute_gradient_hyper(loss, weights, loggamma, loglambda, batch_size, para_num):
         grad_loggamma = np.exp(loggamma) * (loss/2.0 + 1.0) - (batch_size/2.0 + 1.0)
         grad_loglambda = np.exp(loglambda) * (np.sum(np.abs(weights)) + 1.0) - (para_num + 1.0)
+        # gradient of the hyperparameters for the update in the following
 
         return grad_loggamma, grad_loglambda
 
@@ -225,7 +232,8 @@ if __name__ == "__main__":
                  - (batch_size/2.0 + 1.0) * loggamma - (para_num + 1.0) * loglambda 
         return H
 
-    def leap_frog(v_in, w_in, loggamma_in, loglambda_in, loggamma_v_in, loglambda_v_in):
+    def leap_frog(v_in, w_in, loggamma_in, loglambda_in, loggamma_v_in, loglambda_v_in): # scheme for the integration of the dynamical
+        # system (of the gradient of the Hamiltonian) to construct the Markov Chain and update the hyperp., parameters and weights
         # assign weights from the previous step to the model
         model.trainable_weights[0].assign(w_in)
         
@@ -288,19 +296,19 @@ if __name__ == "__main__":
 
     def compute_epsilon(step):
         coefficient = np.log(epsilon_max/epsilon_min)
-        return epsilon_max * np.exp( - step * coefficient / niters)
+        return epsilon_max * np.exp( - step * coefficient / niters) # needed for leap frog scheme
 
 
     # initial weight
-    w_temp = initial_weight
+    w_temp = initial_weight # choice of weights from the preconditioning step
     print("initial_w", w_temp)
     loggamma_temp = 4. + np.random.normal()
     loglambda_temp = np.random.normal()
 
-    model.trainable_weights[0].assign(w_temp)
+    model.trainable_weights[0].assign(w_temp) # weights assigned to the model
     loss_original, _ = compute_gradients_and_update(batch_y0, batch_yN) # compute the initial Hamiltonian
 
-    loggamma_temp = np.log(batch_size / loss_original)
+    loggamma_temp = np.log(batch_size / loss_original) # precision of the Gaussian noise distribution gamma (see page 8/22 paper)
     print("This is initial guess", loggamma_temp, "with loss", loss_original)
     if loggamma_temp > 6.:
         loggamma_temp = 6.
@@ -320,14 +328,17 @@ if __name__ == "__main__":
         loglambda_v_initial = np.random.normal()
 
         loss_initial, _ = compute_gradients_and_update(batch_y0, batch_yN) # compute the initial Hamiltonian
-        loss_initial = compute_Hamiltonian(loss_initial, w_temp, loggamma_temp, loglambda_temp, batch_size, num_param)
+        loss_initial = compute_Hamiltonian(loss_initial, w_temp, loggamma_temp, loglambda_temp, batch_size, num_param) # initial
+        # loss with weights resulting from preconditioner
 
         v_new, w_new, loggamma_new, loglambda_new, loggamma_v_new, loglambda_v_new = \
                                 leap_frog(v_initial, w_temp, loggamma_temp, loglambda_temp, loggamma_v_initial, loglambda_v_initial)
+        # updating the model (hyper)parameters and the weights
 
         # compute the final Hamiltonian
         loss_finial, _ = compute_gradients_and_update(batch_y0, batch_yN)
-        loss_finial = compute_Hamiltonian(loss_finial, w_new, loggamma_new, loglambda_new, batch_size, num_param)
+        loss_finial = compute_Hamiltonian(loss_finial, w_new, loggamma_new, loglambda_new, batch_size, num_param) # final loss
+        # with weights resulting from the leap frog optimization
 
         # making decisions
         p_temp = np.exp(-loss_finial + loss_initial + \
@@ -336,7 +347,8 @@ if __name__ == "__main__":
         p = min(1, p_temp)
         p_decision = np.random.uniform()
         if p > p_decision:
-            parameters[step:step+1, :, :] = w_new
+            parameters[step:step+1, :, :] = w_new # the updated weights from leap frog
+            # all the updated parameters
             w_temp = w_new
             loggammalist[step, 0] = loggamma_new
             loglambdalist[step, 0] = loglambda_new
@@ -344,7 +356,8 @@ if __name__ == "__main__":
             loggamma_temp = loggamma_new
             loglambda_temp = loglambda_new
         else:
-            parameters[step:step+1, :, :] = w_temp
+            parameters[step:step+1, :, :] = w_temp # the weights from preconditioning
+            # all the non updated parameters
             model.trainable_weights[0].assign(w_temp)
             loggammalist[step, 0] = loggamma_temp
             loglambdalist[step, 0] = loglambda_temp
@@ -355,9 +368,9 @@ if __name__ == "__main__":
         print(p > p_decision)
 
         
-    np.save('parameters', parameters)
-    np.save('loggammalist', loggammalist)
-    np.save('loglikelihood', loglikelihood)
+    np.save('parameters', parameters) # parameters chain
+    np.save('loggammalist', loggammalist) # loggamma chain
+    np.save('loglikelihood', loglikelihood) # likelihood chain
 
 
 
