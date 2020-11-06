@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 plt.switch_backend('agg')
-#import tensorflow.contrib.eager as tfe
+
 from tensorflow.keras import layers, initializers
 from scipy.integrate import odeint
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     sigma_x = np.std(true_yy[:,0:1])  # Standard deviation of data for x = preys
     sigma_y = np.std(true_yy[:,1:2])  # Standard deviation of data for y = predators
 
-    noise_level = 0.03  # Adding some nois with this noise level
+    noise_level = 0.03  # Adding some noise with this noise level
     sigma_normal = max(sigma_x, sigma_y)  # Considering the highest between the 2
 
     true_y[:, 0:1] = true_y[:, 0:1]/sigma_x + noise_level * np.random.randn(true_y[:, 0:1].shape[0], true_y[:, 0:1].shape[1])
