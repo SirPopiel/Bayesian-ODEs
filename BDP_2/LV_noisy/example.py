@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     # Data of the problem
     data_size = 16001  # Size of the dataset (fictitious and created by adding noise to the real
-                       #  data found through the integration of the system)
+                       # data found through the integration of the system)
     batch_time = 320  #
     niters = 5000  # Number of Hamiltonian MC iterations
     batch_size = 1000
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     z0 = [5., 5.]  # Starting point: 5 preys, 5 predators
     true_yy = odeint(VP, z0, t_grid, args=(alpha, beta, gamma, sigma))
     # This calls the Python scipy built-in odeint function in FORTRAN to find the exact values
-    #  for the trajectories
+    # for the trajectories
 
     true_y = true_yy
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     true_y[:, 0:1] = true_y[:, 0:1]/sigma_x + noise_level * np.random.randn(true_y[:, 0:1].shape[0], true_y[:, 0:1].shape[1])
     true_y[:, 1:2] = true_y[:, 1:2]/sigma_y + noise_level * np.random.randn(true_y[:, 1:2].shape[0], true_y[:, 1:2].shape[1])
     # The 2 lines above normalize the data and then add a noise being extract from a gaussian
-    #  random variable with 0 mean and (noise_level)^2 variance.
+    # random variable with 0 mean and (noise_level)^2 variance.
 
 
     def get_batch():
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         batch_y0 = true_y[starts] 
         batch_yN = true_y[starts + batch_time]
         # The function returns a tensor composed by some y0 and the respective yN,
-        #  being y0 + DeltaT.
+        # being y0 + DeltaT.
         return tf.cast(batch_y0, dtype=tf.float32), tf.cast(batch_yN, dtype=tf.float32)
 
 
@@ -117,7 +117,7 @@ if __name__ == "__main__":
             h_out2 = p3 * h2 + sigma_x * p4 * h2*h1  # Why sigma_x??
             h_out = tf.concat([h_out1, h_out2], 1)
             # This function is computing the f(x(t), t; p) at [x,t] in 'inputs' and with p
-            #  the actual weights of the model
+            # the actual weights of the model
             return h_out
 
 
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     #########################################
 
     # Until here no Bayesian framework is considered. It is just to provide the model with
-    #  a starting point 
+    # a starting point
 
     initial_weight = parameters_pre  # We initialize the weights with the parameters found in preconditioning
     print(initial_weight.shape, "here")
@@ -234,7 +234,7 @@ if __name__ == "__main__":
 
     def leap_frog(v_in, w_in, loggamma_in, loglambda_in, loggamma_v_in, loglambda_v_in):
         # In pratica, non viene utilizzato il gradient descent, ma il leapfrog, algoritmo per ottimizzazione
-        #  unconstrained implementato in questa porzione di codice... Ci fidiamo...
+        # unconstrained implementato in questa porzione di codice... Ci fidiamo...
 
         model.trainable_weights[0].assign(w_in)
         v_new = v_in
@@ -306,6 +306,7 @@ if __name__ == "__main__":
     loss_original, _ = compute_gradients_and_update(batch_y0, batch_yN)  # Compute the initial Hamiltonian
 
     loggamma_temp = np.log(batch_size / loss_original)  # We define an initial guess for loggamma ?? Why defined as such?
+    # Michela per Federico: 'precision of the Gaussian noise distribution 'gamma' (vedi pagina 8/22 paper)'
 
     print("This is initial guess", loggamma_temp, "with loss", loss_original)
     if loggamma_temp > 6.:
@@ -324,7 +325,7 @@ if __name__ == "__main__":
         loggamma_v_initial = np.random.normal()
         loglambda_v_initial = np.random.normal()
 
-        loss_initial, _ = compute_gradients_and_update(batch_y0, batch_yN)  # compute the initial Hamiltonian
+        loss_initial, _ = compute_gradients_and_update(batch_y0, batch_yN) # compute the initial Hamiltonian
         # This line uses the weights of the preconditioner (see line 303) to compute the loss function with those
         loss_initial = compute_Hamiltonian(loss_initial, w_temp, loggamma_temp, loglambda_temp, batch_size, para_num)
         # Then it computes the Hamiltonian
