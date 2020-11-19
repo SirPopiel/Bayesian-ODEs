@@ -211,25 +211,46 @@ if __name__ == "__main__":
 
 
     # function to compute the kinetic energy
+    # def kinetic_energy(V, loggamma_v, loglambda_v):
+    #     q = (np.sum(-V**2) - loggamma_v**2 - loglambda_v**2)/2.0
+    #     return q
+
     def kinetic_energy(V, loggamma_v, loglambda_v):
-        q = (np.sum(-V**2) - loggamma_v**2 - loglambda_v**2)/2.0
+        q = (np.sum(-V**2)/mom_theta - loggamma_v**2/mom_gamma - loglambda_v**2/mom_lambda)/2.0
         return q
+
+    # def compute_gradient_param(dWeights, loggamma, loglambda, batch_size, para_num):
+    #     WW = model.trainable_weights[0].numpy()
+    #     dWeights = np.exp(loggamma)/2.0 * dWeights + np.exp(loglambda) * np.sign(WW)
+    #     return dWeights
 
     def compute_gradient_param(dWeights, loggamma, loglambda, batch_size, para_num):
         WW = model.trainable_weights[0].numpy()
-        dWeights = np.exp(loggamma)/2.0 * dWeights + np.exp(loglambda) * np.sign(WW)
+        dWeights = np.exp(loggamma)/2.0 * dWeights + np.exp(loglambda) * np.sign(WW - w_means)
         return dWeights
+
+    # def compute_gradient_hyper(loss, weights, loggamma, loglambda, batch_size, para_num):
+    #     grad_loggamma = np.exp(loggamma) * (loss/2.0 + 1.0) - (batch_size/2.0 + 1.0)
+    #     grad_loglambda = np.exp(loglambda) * (np.sum(np.abs(weights)) + 1.0) - (para_num + 1.0)
+    #     # gradient of the hyperparameters for the update in the following
+    #
+    #     return grad_loggamma, grad_loglambda
 
     def compute_gradient_hyper(loss, weights, loggamma, loglambda, batch_size, para_num):
         grad_loggamma = np.exp(loggamma) * (loss/2.0 + 1.0) - (batch_size/2.0 + 1.0)
-        grad_loglambda = np.exp(loglambda) * (np.sum(np.abs(weights)) + 1.0) - (para_num + 1.0)
+        grad_loglambda = np.exp(loglambda) * (np.sum(np.abs(weights - w_means)) + 1.0) - (para_num + 1.0)
         # gradient of the hyperparameters for the update in the following
 
         return grad_loggamma, grad_loglambda
 
+    # def compute_Hamiltonian(loss, weights, loggamma, loglambda, batch_size, para_num):
+    #     H = np.exp(loggamma)*(loss/2.0 + 1.0) + np.exp(loglambda)*(np.sum(np.abs(weights)) + 1.0)\
+    #              - (batch_size/2.0 + 1.0) * loggamma - (para_num + 1.0) * loglambda
+    #     return H
+
     def compute_Hamiltonian(loss, weights, loggamma, loglambda, batch_size, para_num):
-        H = np.exp(loggamma)*(loss/2.0 + 1.0) + np.exp(loglambda)*(np.sum(np.abs(weights)) + 1.0)\
-                 - (batch_size/2.0 + 1.0) * loggamma - (para_num + 1.0) * loglambda 
+        H = np.exp(loggamma)*(loss/2.0 + 1.0) + np.exp(loglambda)*(np.sum(np.abs(weights - w_means)) + 1.0)\
+                 - (batch_size/2.0 + 1.0) * loggamma - (para_num + 1.0) * loglambda
         return H
 
     def leap_frog(v_in, w_in, loggamma_in, loglambda_in, loggamma_v_in, loglambda_v_in): # scheme for the integration of the dynamical
@@ -261,8 +282,8 @@ if __name__ == "__main__":
             v_new = v_new - epsilon/2*(dWeights)
             w_new = model.trainable_weights[0].numpy() + epsilon * v_new
             model.trainable_weights[0].assign(w_new)
-            loggamma_new = loggamma_new + epsilon * loggamma_v_new
-            loglambda_new = loglambda_new + epsilon * loglambda_v_new
+            loggamma_new = loggamma_new + epsilon/mom_gamma * loggamma_v_new
+            loglambda_new = loglambda_new + epsilon/mom_lambda * loglambda_v_new
             
             # Second half of the leap frog
             loss, dWeights = compute_gradients_and_update(batch_y0, batch_yN)
@@ -288,10 +309,16 @@ if __name__ == "__main__":
     loggammalist = np.zeros((niters, 1)) # book keeping the loggamma
     loglambdalist = np.zeros((niters, 1)) # book keeping the loggamma
     loglikelihood = np.zeros((niters, 1)) # book keeping the loggamma
-    L = 10 # leap frog step number
+    mom_theta = 0.15  # Momentum for the Hamiltonian Monte Carlo for theta parameters
+    mom_lambda = 0.01  # Momentum for the Hamiltonian Monte Carlo for lambda parameters
+    mom_gamma = 0.01  # Momentum for the Hamiltonian Monte Carlo for gamma parameters
+    L = 40 # leap frog step number
     epsilon = 0.001 # leap frog step size
     epsilon_max = 0.0002    # max 0.001
     epsilon_min = 0.0002   # max 0.001
+    acc_rate = 0  # Used to compute and display the acceptance rate of the candidates
+    w_means = np.zeros(num_param, dtype=np.float32)  # A priori means of parameters of the model
+    w_means = w_means.reshape(20, 2)
     
 
     def compute_epsilon(step):
@@ -323,9 +350,10 @@ if __name__ == "__main__":
         epsilon = compute_epsilon(step)
 
         print(step)
-        v_initial = np.random.randn(num_param//2, 2) # initialize the velocity
-        loggamma_v_initial = np.random.normal()
-        loglambda_v_initial = np.random.normal()
+
+        v_initial = np.sqrt(mom_theta)*np.random.randn(num_param//2, 2) # initialize the velocity
+        loggamma_v_initial = np.sqrt(mom_gamma)*np.random.normal()
+        loglambda_v_initial = np.sqrt(mom_lambda)*np.random.normal()
 
         loss_initial, _ = compute_gradients_and_update(batch_y0, batch_yN) # compute the initial Hamiltonian
         loss_initial = compute_Hamiltonian(loss_initial, w_temp, loggamma_temp, loglambda_temp, batch_size, num_param) # initial
@@ -355,6 +383,7 @@ if __name__ == "__main__":
             loglikelihood[step, 0] = loss_finial
             loggamma_temp = loggamma_new
             loglambda_temp = loglambda_new
+            acc_rate += 1
         else:
             parameters[step:step+1, :, :] = w_temp # the weights from preconditioning
             # all the non updated parameters
@@ -367,6 +396,7 @@ if __name__ == "__main__":
         print('probability', p)
         print(p > p_decision)
 
+    print('Acceptance rate: ', acc_rate / niters)
         
     np.save('parameters', parameters) # parameters chain
     np.save('loggammalist', loggammalist) # loggamma chain
@@ -376,3 +406,7 @@ if __name__ == "__main__":
     np.savetxt("data_loggammalist.csv", loggammalist, delimiter=',')
     np.savetxt("data_loglikelihood.csv", loglikelihood, delimiter=',')
     np.savetxt("data_loglambda.csv", loglambdalist, delimiter=',')
+
+
+
+

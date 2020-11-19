@@ -367,3 +367,8 @@ if __name__ == "__main__":
     np.save('parameters', parameters)  # The Monte Carlo chain of the parameters
     np.save('loggammalist', loggammalist)  # The Monte Carlo chain of loggamma
     np.save('loglikelihood', loglikelihood)  # The Monte Carlo chain of losses
+
+    np.savetxt("data_weights.csv", parameters, delimiter=',')
+    np.savetxt("data_loggammalist.csv", loggammalist, delimiter=',')
+    np.savetxt("data_loglikelihood.csv", loglikelihood, delimiter=',')
+    np.savetxt("data_loglambda.csv", loglambdalist, delimiter=',')
