@@ -232,7 +232,7 @@ if __name__ == "__main__":
 
     def compute_gradient_param(dWeights, loggamma, loglambda, batch_size, para_num):
         WW = model.trainable_weights[0].numpy()
-        dWeights = np.exp(loggamma)/2.0 * dWeights + np.exp(loglambda) * np.sign(WW - w_means)
+        dWeights = np.exp(loggamma)/2.0 * dWeights + np.exp(loglambda) * WW
         return dWeights
 
     # def compute_gradient_hyper(loss, weights, loggamma, loglambda, batch_size, para_num):
@@ -244,7 +244,7 @@ if __name__ == "__main__":
 
     def compute_gradient_hyper(loss, weights, loggamma, loglambda, batch_size, para_num):
         grad_loggamma = np.exp(loggamma) * (loss/2.0 + 1.0) - (batch_size/2.0 + 1.0)
-        grad_loglambda = np.exp(loglambda) * (np.sum(np.abs(weights - w_means)) + 1.0) - (para_num + 1.0)
+        grad_loglambda = np.exp(loglambda) * (np.sum(weights**2)/2.0 + 1.0) - (para_num/2 + para_num + 1.0)
         # This somehow computes the gradient of the hyper parameters in order to update them from step to step
 
         return grad_loggamma, grad_loglambda
@@ -255,8 +255,8 @@ if __name__ == "__main__":
     #     return H
 
     def compute_Hamiltonian(loss, weights, loggamma, loglambda, batch_size, para_num):
-        H = np.exp(loggamma)*(loss/2.0 + 1.0) + np.exp(loglambda)*(np.sum(np.abs(weights - w_means)) + 1.0) \
-                 - (batch_size/2.0 + 1.0) * loggamma - (para_num + 1.0) * loglambda
+        H = np.exp(loggamma)*(loss/2.0 + 1.0) + np.exp(loglambda)*(np.sum(weights**2)/2.0 + 1.0) \
+                 - (batch_size/2.0 + 1.0) * loggamma - (para_num/2 + para_num + 1.0) * loglambda
         return H
 
     def leap_frog(v_in, w_in, loggamma_in, loglambda_in, loggamma_v_in, loglambda_v_in):
