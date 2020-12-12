@@ -372,7 +372,7 @@ if __name__ == "__main__":
     np.save('loggammalist', loggammalist) # loggamma chain
     np.save('loglikelihood', loglikelihood) # likelihood chain
 
-    np.savetxt("data_weights.csv", parameters, delimiter=',')
+    np.savetxt("data_weights.csv", parameters.reshape((1500, 20)), delimiter=',')
     np.savetxt("data_loggammalist.csv", loggammalist, delimiter=',')
     np.savetxt("data_loglikelihood.csv", loglikelihood, delimiter=',')
     np.savetxt("data_loglambda.csv", loglambdalist, delimiter=',')

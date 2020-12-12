@@ -313,12 +313,12 @@ if __name__ == "__main__":
     mom_lambda = 0.01  # Momentum for the Hamiltonian Monte Carlo for lambda parameters
     mom_gamma = 0.01  # Momentum for the Hamiltonian Monte Carlo for gamma parameters
     L = 40 # leap frog step number
-    epsilon = 0.001 # leap frog step size
+    epsilon = 0.002 # leap frog step size
     epsilon_max = 0.0002    # max 0.001
     epsilon_min = 0.0002   # max 0.001
     acc_rate = 0  # Used to compute and display the acceptance rate of the candidates
     w_means = np.zeros(num_param, dtype=np.float32)  # A priori means of parameters of the model
-    w_means = w_means.reshape(20, 2)
+    w_means = w_means.reshape(10, 2)
     
 
     def compute_epsilon(step):
@@ -402,11 +402,7 @@ if __name__ == "__main__":
     np.save('loggammalist', loggammalist) # loggamma chain
     np.save('loglikelihood', loglikelihood) # likelihood chain
 
-    np.savetxt("data_weights.csv", parameters, delimiter=',')
+    np.savetxt("data_weights.csv", parameters.reshape((1500, 20)), delimiter=',')
     np.savetxt("data_loggammalist.csv", loggammalist, delimiter=',')
     np.savetxt("data_loglikelihood.csv", loglikelihood, delimiter=',')
     np.savetxt("data_loglambda.csv", loglambdalist, delimiter=',')
-
-
-
-
