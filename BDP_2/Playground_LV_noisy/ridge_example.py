@@ -397,9 +397,9 @@ if __name__ == "__main__":
 
     print('Acceptance rate: ', acc_rate/niters)
 
-    np.save('parameters', parameters)  # The Monte Carlo chain of the parameters
-    np.save('loggammalist', loggammalist)  # The Monte Carlo chain of loggamma
-    np.save('loglikelihood', loglikelihood)  # The Monte Carlo chain of losses
+    np.save('parameters_ridge', parameters)  # The Monte Carlo chain of the parameters
+    np.save('loggammalist_ridge', loggammalist)  # The Monte Carlo chain of loggamma
+    np.save('loglikelihood_ridge', loglikelihood)  # The Monte Carlo chain of losses
 
     np.savetxt("data_weights.csv", parameters, delimiter=',')
     np.savetxt("data_loggammalist.csv", loggammalist, delimiter=',')
