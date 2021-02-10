@@ -1,0 +1,19 @@
+China: [4.05296519e-01,  9.84976510e-02,  3.14075635e+01,  5.30424908e-02,
+         2.26315636e+05, -4.45082706e-01,  9.79603863e-02]
+
+MODEL: def SIRD_reduced_30_new(z, t, beta0, gamma, kappa, mu0, alpha0, alpha1, alpha2):
+
+    I, R, D = z
+    
+    S0 = alpha0 * beta0
+    S = S0 - I - R - D
+    mu = mu0 * (1/(t+1))
+    gamma = gamma*(np.exp((t - kappa)/7)/(1 + np.exp((t - kappa)/7)))
+    beta = beta0* np.exp(-(alpha2 * beta0) * t)
+    dS = - beta * I * S / S0
+    dI = beta * I * S / S0 - gamma * I - mu * I
+    dR = gamma * I 
+    dD = mu * I
+
+    dzdt = [dI, dR, dD]
+    return dzdt
