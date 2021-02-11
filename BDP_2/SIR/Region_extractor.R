@@ -13,5 +13,5 @@ plot(1:length(D), D)
 region <- data.frame(I = I, R = R, D = D)
 write.csv(region, 'RegionER.csv', row.names = FALSE)
 
-x.grid <- seq(0, 04, length.out=1000)
-plot(x.grid, dgamma(x.grid, 2*0.5, 0.5), type='l')
+x.grid <- seq(0, 4, length.out=1000)
+plot(x.grid, dgamma(x.grid, 2*5, 5), type='l')
