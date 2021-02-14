@@ -5,6 +5,7 @@ import numpy as np
 import numpy.random as npr
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import time
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 plt.switch_backend('agg')
@@ -82,6 +83,8 @@ if __name__ == "__main__":
         return tf.cast(batch_y0, dtype=tf.float32), tf.cast(batch_yN, dtype=tf.float32)
 
 
+    time_in = time.time()
+
     num_param = 4  # Number of parameters
     para_num = num_param
 
@@ -94,6 +97,7 @@ if __name__ == "__main__":
     #########################################
     #         precondition start            #
     #########################################
+
     niters_pre = 500  # Number of iterations of the preconditioner
 
     class ODEModel_pre(tf.keras.Model):
@@ -275,7 +279,6 @@ if __name__ == "__main__":
 
         return v_new, w_new, loggamma_new, loglambda_new, loggamma_v_new, loglambda_v_new
 
-
     neural_ode_test = NeuralODE(model, t=t_grid[0:data_size:20])
     parameters = np.zeros((niters, para_num))  # book keeping the parameters
     loggammalist = np.zeros((niters, 1))  # book keeping the loggamma
@@ -363,6 +366,8 @@ if __name__ == "__main__":
 
         print('probability', p)
         print(p > p_decision)
+
+    print(time.time() - time_in)
 
     np.save('parameters', parameters)  # The Monte Carlo chain of the parameters
     np.save('loggammalist', loggammalist)  # The Monte Carlo chain of loggamma

@@ -8,14 +8,37 @@ import pandas as pd
 
 
 class EABCSMCSampler:
-    def __init__(self, true_y, ODEmodel, num_param, numerical_estimate, final_time, lambda_ranges = None, prior_means=None, n_jobs=-1, verbose=True):
+    """Empirical ABC-SMC implementation for epidemiological models.
+
+    Arguments (also attributes):
+        true_y(numpy array) : the true values for the observable compartments, as used for scipy.curve_fit function
+        ODEmodel(function) : function which numerically fits the ODE system
+        num_param(int): number of parameters to estimate
+        popt(numpy array): numerical estimate of the parameters
+        final_time(int): end time for the fitting
+        lambda_temp(numpy array): array of lambda functions representing the priors on lambda
+        prior_means(numpy array): priors for the mean of the parameters (only mean of the prior can be specified)
+        n_jobs(int): number of jobs to be used 
+        verbose(bool): verbosity of the class
+        sigma(numpy array): array with the sd of the observations
+    
+    Attributes:
+        parameters(numpy array): array of estimated parameters' posteriors
+        final_weights(numpy array): last weights used for abc-smc (useful to proceed manually in case of errors)
+        fitted(bool): indicates if the model was fitted
+        
+
+    """
+    
+    def __init__(self, true_y, ODEmodel, num_param, numerical_estimate, final_time, lambda_ranges = None, 
+                 sigma = None, prior_means=None, n_jobs=-1, verbose=True):
         self.true_y = true_y
         self.ODEmodel = ODEmodel
         self.num_param = num_param
         self.popt = numerical_estimate
         self.final_time = final_time
         if lambda_ranges is None:
-            self.lambda_temp = [npr.uniform(low=0.5, high=5)] * self.num_param
+            self.lambda_temp = [lambda: npr.uniform(low=0.5, high=5)] * self.num_param
         else:
             self.lambda_temp = lambda_ranges
         if prior_means is None:
@@ -24,12 +47,16 @@ class EABCSMCSampler:
             self.prior_means = prior_means
         self.n_jobs = n_jobs
         self.verbose = verbose
+        self.sigma = sigma
         self.parameters = None
         self.final_weights = None
         self.fitted = False
 
+
     def compute_loss(self, params):
         residuals = self.true_y - self.ODEmodel(np.arange(self.final_time), *params)
+        if self.sigma is not None:
+            residuals = residuals/self.sigma
         loss = np.sum(residuals**2)/1e9
         return loss
 
@@ -72,12 +99,10 @@ class EABCSMCSampler:
         loss = []
 
         def iteration():
-            w_temp = [self.adaptive_gamma_sampling(true_center=self.popt[j], shape=self.lambda_temp[j] * self.prior_means[j], rate=self.lambda_temp[j],
+            w_temp = [self.adaptive_gamma_sampling(true_center=self.popt[j], shape=self.lambda_temp[j]()* self.prior_means[j], rate=self.lambda_temp[j](),
                                         quantile_1=alpha_quant, quantile_2=1 - alpha_quant) for j in range(self.num_param)]
 
             # After the sampling from the prior we go on by simulating the model
-            # sim_trajectories = simulate_trajectories_from_theta_hat(model, w_temp)
-
             sim_loss = self.compute_loss(w_temp)
             loss.append(sim_loss)
 
@@ -88,12 +113,22 @@ class EABCSMCSampler:
         if self.verbose:
             parameters = Parallel(n_jobs=self.n_jobs)(delayed(iteration)() for _ in tqdm(range(niters)))
         else:
-            parameters = Parallel(n_jobs=self.n_jobs)(delayed(iteration)() for _ in tqdm(range(niters)))
+            parameters = Parallel(n_jobs=self.n_jobs)(delayed(iteration)() for _ in range(niters))
 
         parameters = np.array(list(filter(None.__ne__, parameters)))
 
         naccepted = parameters.shape[0]
-        print('Acceptance rate: ', naccepted / niters)
+
+        if self.verbose:
+            print('Acceptance rate: ', naccepted / niters)
+
+        if naccepted == 0:
+            if self.verbose:
+                print("No accepted points, restarting with more iterations and bigger epsilon.")
+            eps = eps * 2
+            self.epsilon_start = eps
+            borders = self.border_estimates_e_abc(eps, niters * 2)
+            return borders
 
         borders = [np.min(parameters[:, i]) for i in range(self.num_param)]
 
@@ -120,7 +155,7 @@ class EABCSMCSampler:
         return w_temp
 
 # iperparametro per noise level?
-    def preprocessing_e_abc(self, eps, niters, borders, alpha_quant=0.25):
+    def preprocessing_e_abc(self, eps, niters, borders):
         # This function performs the first sampling from the region defined through the borders estimating function and
         #  returns the estimated parameters and the initializing weights, ([1,1,1,...,1] normalized)
 
@@ -129,7 +164,7 @@ class EABCSMCSampler:
 
         def iteration():
 
-            w_temp = [self.e_abc_gamma_sampling(self.popt[j], self.lambda_temp[j] * self.prior_means[j], self.lambda_temp[j],
+            w_temp = [self.e_abc_gamma_sampling(self.popt[j], self.lambda_temp[j]() * self.prior_means[j], self.lambda_temp[j](),
                                                 borders[j]) for j in range(self.num_param)]
 
             # After the sampling from the prior we go on by simulating the model
@@ -152,6 +187,16 @@ class EABCSMCSampler:
 
         if self.verbose:
             print('Acceptance rate: ', naccepted / niters)
+
+        if naccepted == 0:
+            if self.verbose:
+                print("No accepted points, restarting with more iterations and bigger epsilon.")
+            eps = eps * 2
+            self.epsilon_start = self.epsilon_start * 2
+            self.epsilon_schedule.append(self.epsilon_schedule[-1]/2)
+            self.niters.append(self.niters[-1])
+            parameters, weights = self.preprocessing_e_abc(eps*2, niters*2, borders)
+            return parameters, weights
 
         weights = np.ones(parameters.shape[0]) / parameters.shape[0]
 
@@ -215,17 +260,18 @@ class EABCSMCSampler:
 
         if self.verbose:
             parameters, new_weights = zip(
-                *Parallel(n_jobs=self.n_jobs)(delayed(iteration)(old_parameters, weights, self.num_param) for _ in tqdm(range(niters))))
+                *Parallel(n_jobs=self.n_jobs)(delayed(iteration)() for _ in tqdm(range(niters))))
         else:
             parameters, new_weights = zip(
-                *Parallel(n_jobs=self.n_jobs)(delayed(iteration)(old_parameters, weights, self.num_param) for _ in range(niters)))
+                *Parallel(n_jobs=self.n_jobs)(delayed(iteration)() for _ in range(niters)))
 
         parameters = np.array(list(filter(None.__ne__, parameters)))
 
         new_weights = np.array(list(filter(None.__ne__, new_weights)))
 
         naccepted = parameters.shape[0]
-        print('Acceptance rate: ', naccepted / niters)
+        if self.verbose:
+            print('Acceptance rate: ', naccepted / niters)
 
         new_weights = self.normalize_weights(new_weights)
         new_weights = new_weights.reshape(naccepted)
@@ -237,22 +283,32 @@ class EABCSMCSampler:
         if epsilon_start is None:
             epsilon_start = 10 * self.compute_loss(self.popt)
 
+        self.epsilon_start = epsilon_start
+        self.eps_schedule = eps_schedule
+        self.niters_schedule = niters_schedule
+
         if self.verbose:
             print("Borders estimation start...")
-        borders = self.border_estimates_e_abc(epsilon_start * eps_schedule[0], niters * niters_schedule[0])
+        borders = self.border_estimates_e_abc(self.epsilon_start * self.eps_schedule[0], niters * self.niters_schedule[0])
 
         if self.verbose:
             print("Borders estimation completed, starting preprocessing...")
             print("Borders:", borders)
-        start, start_weights = self.preprocessing_e_abc(epsilon_start * eps_schedule[1], niters * niters_schedule[1], borders)
+        start, start_weights = self.preprocessing_e_abc(self.epsilon_start * self.eps_schedule[1], niters * self.niters_schedule[1], borders)
         if self.verbose:
             print("Preprocessing completed, starting ABC-SMC")
 
-        parameters, weights = self.sample_abc_smc(epsilon_start * eps_schedule[2], niters * niters_schedule[2],
+        parameters, weights = self.sample_abc_smc(self.epsilon_start * self.eps_schedule[2], niters * self.niters_schedule[2],
                                                   np.std(start, axis=0), start, start_weights)
 
-        for i in range(2, len(eps_schedule)):
-            parameters, weights = self.sample_abc_smc(epsilon_start * eps_schedule[i], niters * niters_schedule[i],
+
+        for i in range(2, len(eps_schedule)-1):
+            if self.verbose:
+                print('ABS-SMC round : ', i)
+            self.parameters = parameters
+            self.final_weights = weights
+
+            parameters, weights = self.sample_abc_smc(self.epsilon_start * self.eps_schedule[i+1], niters * self.niters_schedule[i+1],
                                                       np.std(parameters, axis=0), parameters, weights)
 
 
