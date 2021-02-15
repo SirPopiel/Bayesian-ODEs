@@ -1,15 +1,12 @@
-# BayNuDes
+# Bayesian data-driven model discovery under uncertainty
 
-Risorse utili per capire cosa stracazzo siano le Neural Odes:
+Bayesian Statistics Course held @ Politecnico di Milano by Professor Alessandra Guglielmi, Doctor Riccardo Corradin, Doctor Mario Beraha
 
-- https://jontysinai.github.io/jekyll/update/2019/01/18/understanding-neural-odes.html
+Developed by: Federico Fatone, Filippo Fedeli, Michela Ceoloni under supervision of Professor Andrea Manzoni.
 
-- https://www.depthfirstlearning.com/2019/NeuralODEs#
+The code is developed in Python, for the relevant Python libraries, please refer to requirements.txt.
 
-- https://github.com/kmkolasinski/deep-learning-notes/tree/master/seminars/2019-03-Neural-Ordinary-Differential-Equations
-
-- https://arxiv.org/pdf/1912.00796.pdf
-
-Repo con un sacco di cose incredibili a riguardo:
-
-- https://github.com/Zymrael/awesome-neural-ode
+In the folder eABCSMC, you can find the documented classes Preconditioner e EABCSMC, which constitute the core of the presented e-ABC-SMC method. 
+An example of their intuitive, end to end usage can be found in the folder Examples, inside the folder Epidemics_response.
+ 
+If you have any question, please contact federico.fatone@mail.polimi.it, filippo.fedeli@mail.polimi.it, michela.ceoloni@mail.polimi.it
