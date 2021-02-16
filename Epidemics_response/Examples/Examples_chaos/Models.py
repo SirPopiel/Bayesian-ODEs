@@ -17,16 +17,19 @@ def SIRD(z, t, S0, beta0, omega, gamma, mu):
     return dzdt
 
 # for 30 days fit for italy
+
+
 def SEIRD(z, t, S0, beta0, gamma, mu0):
     if t == 0:
         I, R, D, E = z
-        E = 11.42 * beta0
+        E = 3.11 * beta0
     else:
         I, R, D, E = z
+    S0 = 100000*S0
     S = S0 - I - R - D - E
     mu = mu0 * (1/(t+1))
-    alpha = 5.61 * beta0
-    beta = beta0 * np.exp(np.exp(-0.0952* beta0 * t) * beta0 * t) 
+    alpha = 1.32 * beta0
+    beta = beta0 * np.exp(-0.0784* beta0 * t) 
     dS = - beta * I * S / S0
     dE = beta * I * S / S0 - alpha * E
     dI = alpha * E - gamma * I - mu * I
@@ -35,8 +38,6 @@ def SEIRD(z, t, S0, beta0, gamma, mu0):
 
     dzdt = [dI, dR, dD, dE]
     return dzdt
-
-
 
 # a more complex model,
 def SIRD_mu(z, t, S0, beta0, omega, gamma, mu0, mu_const):

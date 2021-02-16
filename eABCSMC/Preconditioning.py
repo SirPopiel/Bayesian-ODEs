@@ -11,13 +11,13 @@ def compute_corr(covariance):
     return correlation
 
 class Preconditioner:
-    
+
     """Empirical ABC-SMC implementation for epidemiological models for data preparation and numerical preconditioning.
 
     Arguments (also attributes):
         ODEmodel(function) : function defining the differential model (as in Models.py)
-        model_type(string) : String 
-    
+        model_type(string) : String
+
     Attributes:
         true_y(numpy array): compartments' data in a readable form.
         true_yy(numpy array): compartments' data in the format required for eABCSMC and the numerical fit.
@@ -25,13 +25,13 @@ class Preconditioner:
         t_grid(numpy array): considered time grid.
         Data(pandas dataframe): final dataframe with the compartments' data.
         sigma(numpy array): relative standard deviation on the observations (same format as true_yy).
-        
-        
-    The main methods are preprocess_data and fit, needed to initialize eABCSMC.    
+
+
+    The main methods are preprocess_data and fit, needed to initialize eABCSMC.
     In this moment, SIR is not tested, thus it may present some bugs.
-        
+
     """
-    
+
     def __init__(self, ODEmodel, model_type='SIRD'):
         self.ODEmodel = ODEmodel
         if model_type == 'SIR' or model_type == 'SIRD' or model_type == 'SEIRD':
@@ -46,8 +46,17 @@ class Preconditioner:
         self.sigma = None
 
     def preprocess_data(self, data, start=0, eff=30, ext=150, return_data=False):
-        
+        """ Data preprocessor to be called in order to fit the preconditioner
+        with the data structured in the proper form, assuming data is of the
+        same form as obtained from the Datagetter.
+        The start parameter signals the number of skipped initial days.
+        The eff parameter is the number of days to utilize for fitting the model.
+        The ext parameter is the number of days to keep in memory to assess
+        the model on unknown data.
+        """
+
         data = data[start:ext]
+        ext = data.shape[0]
         data.reset_index(inplace=True, drop=True)
         if self.model_type == 'SIRD' or self.model_type == 'SEIRD':
             extended_y = []
@@ -91,11 +100,11 @@ class Preconditioner:
             fit = integrate.odeint(self.ODEmodel, self.true_y[0], x, args=args)
             fit_p = np.append(fit[:, 0], fit[:, 1])
             return np.append(fit_p, fit[:, 2])
-        
+
         elif self.model_type == 'SIR':
             fit = integrate.odeint(self.ODEmodel, self.true_y[0], x, args=args)
             return np.append(fit_p, fit[:, 1])
-        
+
         elif self.model_type == 'SEIRD':
             fit = integrate.odeint(self.ODEmodel, np.concatenate((self.true_y[0], np.zeros(1))), x, args=args)
             fit_p = np.append(fit[:, 0], fit[:, 1])
@@ -103,6 +112,10 @@ class Preconditioner:
 
 
     def fit(self, p0, bounds=None, std = None ):
+        """ Fits the preconditioning model. P0 are the starting points for the parameters
+        to be used by the numerical solver, bounds are optional bounds for the
+        parameters, std is to be used in case of data with different expected
+        noise for different days/compartments."""
 
         true_yy = np.append(self.true_y[:, 0], self.true_y[:, 1])
         true_yy = np.append(true_yy, self.true_y[:, 2])
