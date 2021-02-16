@@ -52,7 +52,7 @@ Lombardia: 2log(BF_{0,1}): -2.54
 
 Veneto: 2log(BF_{0,1}): 2.59
 
-thus confirming a general increase in the contagion speed in Veneto and a general decrease in Lombardia, while always finding a lower mean $\beta$ in Lombardia than in Veneto. The presented analysis thus suggests that a classification of regions according different degrees of severity of the epidemic trend was justified, however implying extremely outcomes and medium-term evolutions, too.
+thus confirming a general increase in the contagion speed in Veneto and a general decrease in Lombardia, while always finding a lower mean beta in Lombardia than in Veneto. The presented analysis thus suggests that a classification of regions according different degrees of severity of the epidemic trend was justified, however implying extremely outcomes and medium-term evolutions, too.
 
 ## Main References
 
