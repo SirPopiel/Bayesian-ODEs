@@ -13,7 +13,9 @@ An example of their intuitive, end to end usage can be found in the folder Epide
 All the results contained in the report can be reproduced by running the relevant notebooks/scripts, found in LV for the comparison on simulate data between the framework presented in Perdikaris et al. [1] (LV/Perdikaris) and in Epidemics_Models/Examples for the other relevant results.
 
 The code is developed in Python, for the relevant Python libraries, please refer to requirements.txt and run
-''' pip install -r requirements.txt '''
+```
+pip install -r requirements.txt 
+```
  
 If you have any other question, please contact federico.fatone@mail.polimi.it, filippo.fedeli@mail.polimi.it, michela.ceoloni@mail.polimi.it
 
